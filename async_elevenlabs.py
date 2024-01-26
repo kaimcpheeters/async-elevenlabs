@@ -27,8 +27,8 @@ def generate(
     WSS_PATH = f"wss://api.elevenlabs.io/v1/text-to-speech/{voice_id}/stream-input?output_format={output_format}&optimize_streaming_latency={latency}"
     HEADERS = {"xi-api-key": os.environ.get("ELEVEN_API_KEY")}
 
-    BOS = json.dumps({"text": " ", "try_trigger_generation": True})
-    EOS = json.dumps({"text": ""})
+    BOS = json.dumps({"text": " ", "try_trigger_generation": True}) # beginning of stream
+    EOS = json.dumps({"text": ""}) # end of stream
 
     with connect(WSS_PATH, additional_headers=HEADERS) as websocket:
         websocket.send(BOS)
