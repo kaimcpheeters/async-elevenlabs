@@ -20,12 +20,9 @@ OutputFormat = Literal[
 def generate(
     text: Iterator[str],
     voice_id: str,
-    stream: bool = True,
     output_format: OutputFormat = "mp3_44100_128",
     latency: int = 1,
 ) -> Iterator[bytes]:
-    if not stream:
-        raise NotImplementedError("Non-streaming mode not implemented in this simplified version.")
 
     WSS_PATH = f"wss://api.elevenlabs.io/v1/text-to-speech/{voice_id}/stream-input?output_format={output_format}&optimize_streaming_latency={latency}"
     HEADERS = {"xi-api-key": os.environ.get("ELEVEN_API_KEY")}
