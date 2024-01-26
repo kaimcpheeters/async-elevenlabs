@@ -27,13 +27,13 @@ def generate(
     if not stream:
         raise NotImplementedError("Non-streaming mode not implemented in this simplified version.")
 
+    WSS_PATH = f"wss://api.elevenlabs.io/v1/text-to-speech/{voice_id}/stream-input?output_format={output_format}&optimize_streaming_latency={latency}"
+    HEADERS = {"xi-api-key": os.environ.get("ELEVEN_API_KEY")}
+
     BOS = json.dumps({"text": " ", "try_trigger_generation": True})
     EOS = json.dumps({"text": ""})
 
-    with connect(
-        f"wss://api.elevenlabs.io/v1/text-to-speech/{voice_id}/stream-input?output_format={output_format}&optimize_streaming_latency={latency}",
-        additional_headers={"xi-api-key": os.environ.get("ELEVEN_API_KEY")}
-    ) as websocket:
+    with connect(WSS_PATH, additional_headers=HEADERS) as websocket:
         websocket.send(BOS)
 
         for text_chunk in text:
