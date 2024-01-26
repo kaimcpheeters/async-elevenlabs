@@ -17,12 +17,16 @@ OutputFormat = Literal[
     "ulaw_8000",
 ]
 
-def generate_stream_input(
+def generate(
     text: Iterator[str],
     voice_id: str,
+    stream: bool = True,
     output_format: OutputFormat = "mp3_44100_128",
     latency: int = 1,
 ) -> Iterator[bytes]:
+    if not stream:
+        raise NotImplementedError("Non-streaming mode not implemented in this simplified version.")
+
     BOS = json.dumps({"text": " ", "try_trigger_generation": True})
     EOS = json.dumps({"text": ""})
 
@@ -51,18 +55,3 @@ def generate_stream_input(
                     yield base64.b64decode(data["audio"])
             except websockets.exceptions.ConnectionClosed:
                 break
-
-def generate(
-    text: Iterator[str],
-    voice_id: str,
-    stream: bool = True,
-    output_format: OutputFormat = "mp3_44100_128",
-) -> Iterator[bytes]:
-    if stream:
-        return generate_stream_input(
-            text,
-            voice_id,
-            output_format=output_format,
-        )
-    else:
-        raise NotImplementedError("Non-streaming mode not implemented in this simplified version.")
